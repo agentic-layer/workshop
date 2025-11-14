@@ -17,9 +17,15 @@ RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/s
 # Install flux CLI
 RUN curl -s https://fluxcd.io/install.sh | bash
 
+# Install k9s
+RUN curl -sL https://github.com/derailed/k9s/releases/latest/download/k9s_Linux_amd64.tar.gz | tar xz -C /tmp \
+    && mv /tmp/k9s /usr/local/bin/ \
+    && chmod +x /usr/local/bin/k9s
+
 # Verify installations
 RUN kubectl version --client && \
     flux --version && \
+    k9s version && \
     jq --version && \
     curl --version
 

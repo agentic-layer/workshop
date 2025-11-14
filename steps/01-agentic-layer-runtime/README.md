@@ -153,10 +153,10 @@ The observability dashboard:
 Set up port forwarding to access the services locally:
 ```bash
 kubectl port-forward -n showcase-news service/news-agent 8001:8000 & \
-kubectl port-forward -n showcase-news service/summarizer-agent 8002:8000 & \
-kubectl port-forward -n showcase-news service/news-fetcher 8003:8000 & \
-kubectl port-forward -n observability-dashboard service/observability-dashboard 8100:8000 & \
-kubectl port-forward -n monitoring service/lgtm 3000:3000 &
+    kubectl port-forward -n showcase-news service/summarizer-agent 8002:8000 & \
+    kubectl port-forward -n showcase-news service/news-fetcher 8003:8000 & \
+    kubectl port-forward -n observability-dashboard service/observability-dashboard 8100:8000 & \
+    kubectl port-forward -n monitoring service/lgtm 3000:3000 &
 ```
 
 **Note**: The `&` runs each command in the background. Keep the terminal open to maintain the port forwards.
@@ -174,9 +174,15 @@ You can now access:
 
 Before running these tests, open the [Observability Dashboard](http://localhost:8100/) in your browser to watch the agent interactions in real-time.
 
-### Test 1: Basic News Query
-
 This test demonstrates the full workflow: the News Agent fetches recent articles using the MCP tool, then delegates summarization to the Summarizer Agent.
+
+
+
+Watch the Observability Dashboard to see the News Agent calling the Summarizer Agent. Click on the agents to see details of their requests/responses.
+
+### Directly via A2A
+
+You can query the news-agent directly with a simple A2A query. This connection is only possible because we directly expose the agent.
 
 ```bash
 curl http://localhost:8001/ \
@@ -202,35 +208,7 @@ curl http://localhost:8001/ \
   }' | jq
 ```
 
-Watch the Observability Dashboard to see the News Agent calling the Summarizer Agent. Click on the agents to see details of their requests/responses.
-
-### Test 2: Direct Summarization
-
-This test demonstrates calling the Summarizer Agent directly, bypassing the News Agent:
-
-```bash
-curl http://localhost:8002/ \
-  -H "Content-Type: application/json" \
-  -d '{
-    "jsonrpc": "2.0",
-    "id": 1,
-    "method": "message/send",
-    "params": {
-      "message": {
-        "role": "user",
-        "parts": [
-          {
-            "kind": "text",
-            "text": "Please summarize this blog post: https://blog.qaware.de/posts/deepquali/"
-          }
-        ],
-        "messageId": "9229e770-767c-417b-a0b0-f0741243c579",
-        "contextId": "abcd1234-5678-90ab-cdef-1234567890ad"
-      },
-      "metadata": {}
-    }
-  }' | jq
-```
+Next, try querying the summarizer-agent directly.
 
 ---
 

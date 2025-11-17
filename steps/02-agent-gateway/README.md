@@ -111,7 +111,7 @@ kubectl get agent news-agent -n showcase-news -o jsonpath='{.spec.exposed}'
 kubectl get agent summarizer-agent -n showcase-news -o jsonpath='{.spec.exposed}'
 ```
 
-Both should output: `true`
+Both should output: `true`. If not, change the agents until they do!
 
 ### Step 3: Deploy the Agent Gateway
 
@@ -136,51 +136,14 @@ View the gateway pods:
 kubectl get pods -n showcase-news -l app=agent-gateway
 ```
 
-### Step 4: Set Up Access to the Gateway
-
-Set up port forwarding to access the gateway:
-```bash
-kubectl port-forward -n showcase-news service/agent-gateway 8080:10000 &
-```
-
-The gateway is now accessible at: http://localhost:8080/
-
-### Step 5: Deploy Open WebUI
-
-Now that the Agent Gateway is running, deploy Open WebUI as a chat interface:
-
-```bash
-kubectl apply -k ./steps/02-agent-gateway/gui
-```
-
-This creates:
-- A namespace `openwebui`
-- An Open WebUI deployment pre-configured to use the Agent Gateway
-- A service exposing the UI on port 8080
-
-Wait for Open WebUI to be ready:
-```bash
-kubectl wait --for=condition=Available --timeout=120s -n openwebui deployment/open-webui
-```
-
-Set up port forwarding to access the UI:
-```bash
-kubectl port-forward -n openwebui service/open-webui 3000:8080 &
-```
-
-Open WebUI is now accessible at: http://localhost:3000
-
-**Important**: On first access, you'll need to create an account. This is a local account stored in the pod (no external authentication required).
-
 ## Test the Agent Gateway
 
 Setup a port-forward.
 
 ```bash
-kubectl port-forward -n showcase-news service/agent-gateway 8004:8000 &
+kubectl port-forward -n showcase-news service/agent-gateway 8004:10000 &
 ```
 
-(todo: check port)
 
 ### Query via OpenAI-Compatible API
 

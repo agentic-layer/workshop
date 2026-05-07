@@ -1,34 +1,18 @@
 # Service Plane
 
-Let's install a "Service Plane" for users!
+## LibreChat
 
-
-## LibreChat!
-
-First, let's deploy LibreChat as a way to talk to our agents.
-
-Steps:
-1. Follow the instructions at https://www.librechat.ai/docs/local/helm_chart#configuration to generate credentials for a fresh Helm Chart-based installation of Librechat
-2. Create a new `Secret` file with the given credentials and apply it to your cluster. Use `librechat-credentials-env` as the name and `librechat` as the namespace.
-3. Apply the prepared ConfigMap to let LibreChat know how to find our agents. Note you might need to change the name of the ConfigMap if the pod ends up not starting:
+LibreChat is pre-deployed in the shared `librechat` namespace. Connect to it:
 
 ```bash
-kubectl apply -k steps/05-user-serving-plane/librechat/
+kubectl port-forward -n librechat svc/librechat-librechat 3080:3080
 ```
 
-4. Install the LibreChat helm chart with the included `values.yaml` file
+Open <http://localhost:3080>, sign up with any email/password, pick the
+**Agent Gateway** endpoint, and find your agent — agents are prefixed with
+their namespace (e.g. `ns-07/news-agent`).
 
-```bash
-# install Helm
-curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-4 | bash
-
-# install LibreChat
-helm install librechat oci://ghcr.io/danny-avila/librechat-chart/librechat --values steps/05-user-serving-plane/librechat/values.yaml --namespace librechat
-```
-
-5. Open a port-forward and talk to the models!
-
-And yes, you will need to register with a fake email first.
+If the port-forward drops, just re-run the command.
 
 ---
 

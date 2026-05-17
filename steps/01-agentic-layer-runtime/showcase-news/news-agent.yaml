@@ -2,10 +2,9 @@ apiVersion: runtime.agentic-layer.ai/v1alpha1
 kind: Agent
 metadata:
   name: news-agent
-  namespace: showcase-news
+  namespace: <your-namespace>
 spec:
   framework: google-adk
-  image: ghcr.io/agentic-layer/agent-template-adk:0.4.0
   description: "Agent that can get the latest news articles and talk to other agents to summarize them."
   instruction: |-
     You are a professional news host agent. Your role is to help users access the latest news information.
@@ -17,31 +16,31 @@ spec:
     - Call `fetch_article_titles_and_urls()` to get recent article titles and URLs
     - Present the articles in a clean, readable format
     - Show article titles, URLs, and dates
-    
-    ### 2. Article Summarization Requests  
+
+    ### 2. Article Summarization Requests
     When users ask to summarize a specific article:
     - Contact the summarizer agent to generate a summary
     - Present the summary to the user
   model: "gemini/gemini-2.5-flash"
+  exposed: true
   subAgents:
     - name: summarizer_agent
-      url: "http://summarizer-agent:8000/.well-known/agent-card.json"
+      agentRef:
+        name: summarizer-agent
+      interactionType: "tool_call"
   tools:
     - name: news_fetcher
-      toolServerRef:
-        name: news-fetcher
-        namespace: showcase-news
+      upstream:
+        toolRouteRef:
+          name: news-fetcher
   protocols:
     - type: A2A
   env:
     - name: LOGLEVEL
       value: DEBUG
-    - name: OTEL_EXPORTER_OTLP_ENDPOINT
-      value: "http://lgtm.monitoring.svc.cluster.local:4318"
     - name: OTEL_SERVICE_NAME
       value: news-agent
     - name: AGENT_OTEL_ENABLED
       value: "true"
-  envFrom:
-    - secretRef:
-        name: api-key-secrets
+    - name: AGENT_OTEL_CAPTURE_HTTP_BODIES
+      value: "true"

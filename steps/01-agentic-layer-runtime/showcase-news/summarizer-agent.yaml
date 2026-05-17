@@ -2,10 +2,9 @@ apiVersion: runtime.agentic-layer.ai/v1alpha1
 kind: Agent
 metadata:
   name: summarizer-agent
-  namespace: showcase-news
+  namespace: <your-namespace>
 spec:
   framework: google-adk
-  image: ghcr.io/agentic-layer/agent-template-adk:0.4.0
   description: "Agent that can summarize articles from websites."
   instruction: |-
     You are a professional article summarizer. Your task is to:
@@ -25,7 +24,7 @@ spec:
     3. Generate a clear, informative summary
     4. Focus on the most newsworthy aspects
 
-    ## Style Guidelines  
+    ## Style Guidelines
     - Write in clear, professional language
     - Be objective and factual
     - Include specific details when relevant
@@ -36,20 +35,17 @@ spec:
   model: "gemini/gemini-2.5-flash"
   tools:
     - name: news_fetcher
-      toolServerRef:
-        name: news-fetcher
-        namespace: showcase-news
+      upstream:
+        toolRouteRef:
+          name: news-fetcher
   protocols:
     - type: A2A
   env:
     - name: LOGLEVEL
       value: DEBUG
-    - name: OTEL_EXPORTER_OTLP_ENDPOINT
-      value: "http://lgtm.monitoring.svc.cluster.local:4318"
     - name: OTEL_SERVICE_NAME
       value: summarizer-agent
     - name: AGENT_OTEL_ENABLED
       value: "true"
-  envFrom:
-    - secretRef:
-        name: api-key-secrets
+    - name: AGENT_OTEL_CAPTURE_HTTP_BODIES
+      value: "true"

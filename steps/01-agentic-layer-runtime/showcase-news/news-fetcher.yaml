@@ -2,10 +2,23 @@ apiVersion: runtime.agentic-layer.ai/v1alpha1
 kind: ToolServer
 metadata:
   name: news-fetcher
-  namespace: showcase-news
+  namespace: <your-namespace>
 spec:
   protocol: mcp
   transportType: http
-  image: eu.gcr.io/agentic-layer/news-fetcher:0.0.2
+  image: ghcr.io/agentic-layer/showcase-news-news-fetcher:0.6.0
   port: 8000
   replicas: 1
+  env:
+    - name: OTEL_SERVICE_NAME
+      value: news-fetcher
+---
+apiVersion: runtime.agentic-layer.ai/v1alpha1
+kind: ToolRoute
+metadata:
+  name: news-fetcher
+  namespace: <your-namespace>
+spec:
+  upstream:
+    toolServerRef:
+      name: news-fetcher

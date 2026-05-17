@@ -13,7 +13,7 @@ You'll learn how to create a unified platform that simplifies the entire AI life
 - API gateways for unified agent and model access
 - Observability and monitoring stack
 
-This repo guides you through the process of instantiating your own AI platform.
+This repo guides you through the process of deploying agents onto a pre-provisioned AI platform.
 
 ## Agenda
 
@@ -33,43 +33,52 @@ ca. 17:00 Uhr: Ende
 
 ## Overview
 
-- Step 0: Platform setup
-- Step 1: Instantiating a runtime layer to enable agent orchestration
+The cluster is shared across all participants. The platform (operators, gateways,
+monitoring, LibreChat) is already deployed. You get **your own namespace**
+(`ns-XX`) on the shared cluster to deploy your agents into.
+
+- Step 0: Tour the pre-deployed platform
+- Step 1: Deploy your first agents (and chat with them)
 - Step 2: Provisioning of Agent Gateways
 - Step 3: Provisioning of AI Gateways
 - ~~Step 4: Setting up a Quality Plane (WIP)~~
-- Step 5: Setting up a Service Plane
+- Step 5: Bonus user-serving plane experiments (Flowise, Langflow)
 - Step 6: (Bonus) GitOps
 
 # Link to the => [Miro](https://miro.com/app/board/uXjVJpTXfnE=/?share_link_id=152327591545) <=
 
 Passwort: (Wird im Workshop bekannt gegeben)
+
 ---
 
 ## Setup
 
-1. Fork this repository
+1. **Fork** this repository.
 
-2. Create a Github Codespace
+2. **Create a GitHub Codespace** on your fork.
 
-![img.png](img.png)
+   ![img.png](img.png)
 
-3. Claim a vCluster by entering your name (or just an emoji) in this spreadsheet: https://ethercalc.net/mzku2p0zjwkk 
+3. **Claim a namespace** by entering your name (or just an emoji) next to one of
+   the `ns-XX` slots on this spreadsheet: https://ethercalc.net/mzku2p0zjwkk
 
-4. In your Github Codespace, decrypt the kubeconfig (Kubernetes credentials file) for your vCluster.
-```
-# Usage: ./decrypt-kubeconfig.sh <encrypted-file> <password> [output-file]
+4. **Decrypt the shared kubeconfig** (Kubernetes credentials file). The password
+   will be announced during the workshop.
 
-./decrypt-kubeconfig.sh kubeconfigs/participant-1-kubeconfig.yaml.enc <password-announced-during-workshop> kubeconfig.yaml 
-```
+   ```bash
+   ./decrypt-kubeconfig.sh kubeconfigs/workshop-kubeconfig.yaml.enc <password> kubeconfig.yaml
+   ```
 
-5. Connect to your vCluster
-    ```
-    export KUBECONFIG=kubeconfig.yaml 
-   
-    kubectl get pods
-    ```
+5. **Connect to the cluster**. Replace `ns-XX` with the namespace you claimed.
 
-6. Start hacking!
+   ```bash
+   export KUBECONFIG=kubeconfig.yaml
+   export YOUR_NAMESPACE=ns-XX
+
+   kubectl get pods -n $YOUR_NAMESPACE   # should be empty
+   kubectl get namespace $YOUR_NAMESPACE  # confirms your namespace exists
+   ```
+
+6. **Start hacking!** Continue with [Step 0](steps/00-resource-and-platform-plane/).
 
 ---

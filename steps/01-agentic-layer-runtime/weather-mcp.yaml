@@ -1,0 +1,14 @@
+# A ready-to-deploy MCP server that wraps the Open-Meteo APIs.
+# Apply it as-is (after swapping <your-namespace>); your agent
+# will reference it via spec.tools below.
+apiVersion: runtime.agentic-layer.ai/v1alpha1
+kind: ToolServer
+metadata:
+  name: weather-mcp
+  namespace: <your-namespace>
+spec:
+  protocol: mcp
+  transportType: http
+  image: ghcr.io/agentic-layer/workshop/weather-mcp:sha-1f3fa73
+  port: 8000
+  replicas: 1

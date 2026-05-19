@@ -1,0 +1,66 @@
+# Your-own-Agent template.
+#
+# Fill in the TODOs, then `kubectl apply -f your-agent.yaml`.
+# The agent will be reachable in LibreChat under
+# "<your-namespace>/<the metadata.name you choose below>".
+#
+# This template wires the agent to weather-mcp.yaml. Apply that
+# ToolServer first (or together) so the tool is available.
+apiVersion: runtime.agentic-layer.ai/v1alpha1
+kind: Agent
+metadata:
+  # TODO: give your agent a memorable, lowercase, hyphenated name.
+  # Examples: weather-buddy, travel-planner, packing-helper.
+  name: my-agent
+  namespace: <your-namespace>
+spec:
+  # Setting this to `true` registers the agent with the platform
+  # Agent Gateway, so LibreChat can find it. Keep `true`.
+  exposed: true
+
+  # Which LLM the agent should use. Pick from:
+  #   - gemini/gemini-2.5-flash       (fast, the default)
+  #   - gemini/gemini-2.5-flash-lite  (faster, smaller)
+  #   - gemini/gemini-2.5-pro         (smartest, slower)
+  model: "gemini/gemini-2.5-flash"
+
+  # The MCP tools the agent can call.
+  # weather-mcp exposes: geocode_city, get_current_weather, get_forecast.
+  tools:
+    - name: weather-mcp
+      upstream:
+        toolServerRef:
+          name: weather-mcp
+
+  protocols:
+    - type: A2A
+      name: a2a-8000
+
+  # TODO: one-sentence summary, shown by the platform / dashboards.
+  description: >-
+    TODO — what does this agent do? Keep it to a single sentence.
+
+  # TODO: the system prompt. This is the agent's brain.
+  # The agent will use its tools based on these instructions.
+  instruction: |
+    # TODO: replace this whole block with the agent's behaviour.
+    #
+    # A good system prompt usually has three parts:
+    #   1. Persona / role  (who the agent is)
+    #   2. Tools it can use  (when to call which one)
+    #   3. Behaviour rules  (how to respond, what to refuse)
+    #
+    # Example skeleton:
+    #
+    #   You are a friendly weather assistant.
+    #
+    #   ## Tools
+    #   - geocode_city(city) — resolve a city to coordinates
+    #   - get_current_weather(city) — current weather for a city
+    #   - get_forecast(city, days) — 1–7 day forecast
+    #
+    #   ## Behaviour
+    #   - Always reply in the user's language.
+    #   - If asked for "weather", default to get_current_weather.
+    #   - If asked for the week / multiple days, use get_forecast.
+    #   - Politely refuse questions that aren't about weather.

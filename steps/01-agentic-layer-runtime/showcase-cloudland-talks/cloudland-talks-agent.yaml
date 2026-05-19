@@ -8,8 +8,9 @@ spec:
   model: "gemini/gemini-2.5-flash"
   tools:
     - name: cloudland-talks-mcp
-      toolServerRef:
-        name: cloudland-talks-mcp
+      upstream:
+        toolServerRef:
+          name: cloudland-talks-mcp
   protocols:
     - type: A2A
       name: a2a-8000

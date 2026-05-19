@@ -1,22 +1,28 @@
 # Step 01: Deploy Your First AI Agents
 
-You'll deploy into `$YOUR_NAMESPACE`:
+Two self-contained showcases — pick whichever interests you, or do both:
 
-- **News Agent** + **Summarizer Agent** — `Agent` resources
-- **News Fetcher** — a `ToolServer` (MCP) exposed via a `ToolRoute`
+- [`showcase-news/`](showcase-news/) — a **multi-agent** demo: news-agent
+  delegates summarization to a sub-agent and calls an MCP news fetcher.
+- [`showcase-cloudland-talks/`](showcase-cloudland-talks/) — a **single agent
+  with multiple tools** demo: an agent that answers questions about the
+  CloudLand 2026 conference programme. Ships with an `Experiment` you can
+  exercise in [Step 04](../04-experiments/).
 
 Everything else (operators, AI gateway, agent gateway, monitoring, LibreChat)
 is already running cluster-wide — see [Step 00](../00-resource-and-platform-plane/).
 
 ## Apply
 
-Skim the manifests in [`showcase-news/`](showcase-news/), then replace the
-namespace placeholder and apply:
+Skim the manifests in your chosen showcase folder, then replace the namespace
+placeholder and apply. For the news showcase:
 
 ```bash
 sed -i "s/<your-namespace>/$YOUR_NAMESPACE/g" steps/01-agentic-layer-runtime/showcase-news/*.yaml
 kubectl apply -k steps/01-agentic-layer-runtime/showcase-news
 ```
+
+For the CloudLand-talks showcase, swap `showcase-news` → `showcase-cloudland-talks`.
 
 > macOS outside a Codespace: use `sed -i '' …` (BSD sed).
 
@@ -40,10 +46,11 @@ kubectl port-forward -n librechat svc/librechat-librechat 3080:3080
 ```
 
 Open <http://localhost:3080>, sign up with any email/password, pick the
-**Agent Gateway** endpoint, and find your agent in the model list as
-`$YOUR_NAMESPACE/news-agent`. Try:
+**Agent Gateway** endpoint, and find your agent in the model list under
+`$YOUR_NAMESPACE/...`. Try:
 
-> What's the latest news in AI? Summarize the top article.
+> What's the latest news in AI? Summarize the top article.   <!-- news-agent -->
+> What AI talks are at CloudLand 2026?                        <!-- cloudland-talks-agent -->
 
 ## What's happening
 
@@ -66,4 +73,5 @@ and auto-injected OTel so logs + traces show up in Grafana.
 ## Next
 
 [Step 02 — Agent Gateway](../02-agent-gateway/): see how the gateway discovered
-your agent.
+your agent. Or jump to [Step 04 — Experiments](../04-experiments/) to evaluate
+the CloudLand-talks agent end-to-end.

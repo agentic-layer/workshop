@@ -6,7 +6,7 @@ metadata:
 spec:
   protocol: mcp
   transportType: http
-  image: ghcr.io/agentic-layer/workshop/cloudland-talks-mcp:main
+  image: ghcr.io/agentic-layer/workshop/cloudland-talks-mcp:sha-8a18ae0
   port: 8000
   replicas: 1
   env:

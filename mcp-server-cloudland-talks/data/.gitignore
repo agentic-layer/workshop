@@ -1,0 +1,5 @@
+# Raw HTTP responses cached during scraping. The committed product is
+# cloudland_2026.json next to this file; the cache and log are reproducible
+# build artefacts.
+cache/
+scrape.log

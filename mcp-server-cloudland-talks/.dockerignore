@@ -1,0 +1,10 @@
+# Build artefacts and dev-only files. The image only needs server.py,
+# pyproject.toml, uv.lock, and data/cloudland_2026.json.
+.venv/
+__pycache__/
+.pytest_cache/
+tests/
+scrape.py
+data/cache/
+data/scrape.log
+data/.gitignore

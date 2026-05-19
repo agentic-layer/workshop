@@ -1,0 +1,14 @@
+apiVersion: runtime.agentic-layer.ai/v1alpha1
+kind: ToolServer
+metadata:
+  name: cloudland-talks-mcp
+  namespace: <your-namespace>
+spec:
+  protocol: mcp
+  transportType: http
+  image: ghcr.io/agentic-layer/workshop/cloudland-talks-mcp:main
+  port: 8000
+  replicas: 1
+  env:
+    - name: LOGLEVEL
+      value: DEBUG

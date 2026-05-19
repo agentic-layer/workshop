@@ -11,7 +11,7 @@ flux bootstrap github \
   --owner=<your-github-username> \
   --repository=<your-repo-name> \
   --branch=main \
-  --path=steps/06-extras/gitops \
+  --path=steps/04-extras/gitops \
   --personal
 ```
 

@@ -39,11 +39,9 @@ monitoring, LibreChat) is already deployed. You get **your own namespace**
 
 - Step 0: Tour the pre-deployed platform
 - Step 1: Deploy your first agents (and chat with them)
-- Step 2: Provisioning of Agent Gateways
-- Step 3: Provisioning of AI Gateways
-- ~~Step 4: Setting up a Quality Plane (WIP)~~
-- Step 5: Bonus user-serving plane experiments (Flowise, Langflow)
-- Step 6: (Bonus) GitOps
+- Step 2: Evaluate your agent with an Experiment
+- Step 3: (Bonus) alternative UIs — Flowise, Langflow
+- Step 4: (Bonus) GitOps
 
 # Link to the => [Miro](https://miro.com/app/board/uXjVJpTXfnE=/?share_link_id=152327591545) <=
 

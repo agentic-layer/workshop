@@ -7,7 +7,7 @@ Two self-contained showcases — pick whichever interests you, or do both:
 - [`showcase-cloudland-talks/`](showcase-cloudland-talks/) — a **single agent
   with multiple tools** demo: an agent that answers questions about the
   CloudLand 2026 conference programme. Ships with an `Experiment` you can
-  exercise in [Step 04](../04-experiments/).
+  exercise in [Step 02](../02-experiments/).
 
 Everything else (operators, AI gateway, agent gateway, monitoring, LibreChat)
 is already running cluster-wide — see [Step 00](../00-resource-and-platform-plane/).
@@ -72,6 +72,5 @@ and auto-injected OTel so logs + traces show up in Grafana.
 
 ## Next
 
-[Step 02 — Agent Gateway](../02-agent-gateway/): see how the gateway discovered
-your agent. Or jump to [Step 04 — Experiments](../04-experiments/) to evaluate
-the CloudLand-talks agent end-to-end.
+[Step 02 — Experiments](../02-experiments/): evaluate the cloudland-talks
+agent end-to-end with a testbench Experiment.

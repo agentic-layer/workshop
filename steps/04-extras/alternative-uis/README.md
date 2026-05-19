@@ -8,7 +8,7 @@ LibreChat is already covered in step 01 — these are bonus exploration options.
 Flowise is an "Open source agentic systems development platform"
 
 ```bash
-kubectl apply -k steps/03-user-serving-plane/flowise
+kubectl apply -k steps/04-extras/alternative-uis/flowise
 ```
 
 Workshop Idea: Creating our own Flowise Node:
@@ -20,5 +20,5 @@ Workshop Idea: Creating our own Flowise Node:
 Langflow is a "Low-code AI builder for agentic and RAG applications"
 
 ```bash
-kubectl apply -k steps/03-user-serving-plane/langflow
+kubectl apply -k steps/04-extras/alternative-uis/langflow
 ```

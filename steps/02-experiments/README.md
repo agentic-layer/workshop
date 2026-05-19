@@ -1,57 +1,66 @@
 # Step 02: Evaluate Your Agent with an Experiment
 
-You'll define an **Experiment** that runs your agent against a fixed
-dataset of inputs, scores each response (tool-call accuracy, topic
-adherence, goal accuracy via LLM-as-judge), and publishes per-scenario
+You'll apply one or more **Experiment** CRs that run your agents against
+a fixed dataset of inputs, score each response (deterministic string
+checks + LLM-as-judge goal accuracy via RAGAS), and publish per-scenario
 metrics to Mimir.
 
-Prereq: [Step 01](../01-agentic-layer-runtime/) — at least one agent is
-running in `$YOUR_NAMESPACE`.
+Prereq: [Step 01](../01-agentic-layer-runtime/) — the corresponding
+agent(s) are running in your namespace:
 
-## Apply the Experiment
+- `cloudland-talks-experiment.yaml` needs the **cloudland-talks-agent**.
+- `news-experiment.yaml` needs the **news-agent**.
 
-The cloudland-talks showcase ships with one:
-[`cloudland-talks-experiment.yaml`](../01-agentic-layer-runtime/showcase-cloudland-talks/cloudland-talks-experiment.yaml).
-It evaluates the `cloudland-talks-agent` against three scenarios — a
-specific-talk lookup, a category filter, and an off-topic refusal test.
+Drop either resource from `kustomization.yaml` if you only deployed one
+showcase in Step 01.
 
-If you applied the whole `showcase-cloudland-talks/` kustomization in
-step 01, the Experiment is already created — skip to **Trigger** below.
-Otherwise:
+## Apply the Experiments
 
-```bash
-kubectl apply -f steps/01-agentic-layer-runtime/showcase-cloudland-talks/cloudland-talks-experiment.yaml
-```
-
-The testbench-operator turns the `Experiment` CR into a `TestWorkflow`
-in the `testkube` namespace:
+Open the YAML files in this folder and **manually replace every
+`<your-namespace>` with your namespace** — same flow as Step 01. Skim
+the scenarios in `spec.dataset.inline.scenarios` while you're there;
+those are the test cases you're about to run.
 
 ```bash
-kubectl get testworkflow -n testkube
+kubectl apply -k steps/02-experiments
 ```
 
-## Trigger an execution
+Behind the scenes the testbench-operator turns each `Experiment` CR
+into a `TestWorkflow` in the `testkube` namespace:
+
+```bash
+kubectl get experiments -n $YOUR_NAMESPACE
+testkube get testworkflow
+```
+
+Trigger an execution manually:
 
 ```bash
 testkube run testworkflow cloudland-talks-experiment-$YOUR_NAMESPACE-workflow
 ```
 
-The CLI prints an execution ID. Watch progress with:
+> The `Experiment` CR also creates a `TestTrigger` on `spec.trigger.enabled`,
+> but its label selector currently does not match the agent-runtime-operator's
+> Deployment labels, so auto-trigger doesn't fire today. Use the CLI above.
+
+List executions and tail the latest:
 
 ```bash
-testkube get twe <execution-id>
+testkube get twe
 ```
 
-A run takes 5–10 min depending on how many LLM-as-judge calls fire.
+A run with the default cloudland-talks-experiment scenarios completes in
+about a minute — most of the wall time is LLM-as-judge calls.
 
 ## View results
 
 Two surfaces:
 
-**1. Mimir → Grafana.** Open Grafana:
+**1. Mimir → Grafana.**
 
 ```bash
-kubectl port-forward -n monitoring svc/grafana 3000:80
+KUBECTL_PORT_FORWARD_WEBSOCKETS=true \
+  kubectl port-forward -n monitoring svc/grafana 3000:80
 ```
 
 → <http://localhost:3000> → **Explore** → pick the Mimir datasource → try:
@@ -81,18 +90,22 @@ input/reference pairs. The simplest scenario:
 ```yaml
 - name: "My first scenario"
   steps:
-    - input: "What's on Wednesday?"
+    - input: "What talks are on Wednesday?"
       reference:
-        topics: [cloudland-talk]
+        # StringPresence below checks this substring appears in the response.
+        response: "2026-05-20"
       metrics:
+        - metricName: StringPresence
+          threshold: 1.0
         - metricName: AgentGoalAccuracyWithoutReference
-        - metricName: TopicAdherence
-          parameters: { mode: precision }
 ```
 
+Pair a deterministic substring anchor (`StringPresence`) with an
+LLM-judged end-to-end check (`AgentGoalAccuracyWithoutReference`).
 Re-apply the Experiment, then re-run `testkube run testworkflow ...`.
 
 ## Next
 
-[Step 03 — User-Serving Plane](../03-user-serving-plane/) — alternative
-UIs (Flowise, Langflow) for your agents.
+[Step 03 — PII Protection](../03-pii-protection/) — deploy your own
+PII-guarded AI Gateway with Presidio, switch your agent over to it,
+and watch the LLM responses change.

@@ -1,14 +1,30 @@
 {
-  // ...
+  "name": "Agentic Layer Workshop",
   "build": {
     "dockerfile": "Dockerfile"
   },
+  "remoteUser": "vscode",
+  "workspaceFolder": "/workspace",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
   "customizations": {
     "vscode": {
       "extensions": [
+        "ms-kubernetes-tools.vscode-kubernetes-tools",
+        "redhat.vscode-yaml",
         "bierner.markdown-mermaid"
-      ]
+      ],
+      "settings": {
+        "yaml.schemas": {
+          "kubernetes": "*.yaml"
+        }
+      }
     }
   },
-  // ...
+  "forwardPorts": [3080, 3000, 8100],
+  "portsAttributes": {
+    "3080": { "label": "LibreChat", "onAutoForward": "silent" },
+    "3000": { "label": "Grafana", "onAutoForward": "silent" },
+    "8100": { "label": "Observability Dashboard", "onAutoForward": "silent" }
+  },
+  "postCreateCommand": "bash -lc 'echo; echo \"=== Agentic Layer Workshop ===\"; echo; echo \"Next steps:\"; echo \"  1. Claim a namespace on the workshop spreadsheet (link in README).\"; echo \"  2. Decrypt the shared kubeconfig:\"; echo \"       ./decrypt-kubeconfig.sh kubeconfigs/workshop-kubeconfig.yaml.enc <password> kubeconfig.yaml\"; echo \"  3. Export:\"; echo \"       export KUBECONFIG=\\$(pwd)/kubeconfig.yaml\"; echo \"       export YOUR_NAMESPACE=ns-XX\"; echo \"  4. Verify:\"; echo \"       kubectl get pods -n \\$YOUR_NAMESPACE\"; echo; echo \"Then continue with steps/00-resource-and-platform-plane/README.md.\"; echo'"
 }

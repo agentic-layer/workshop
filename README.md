@@ -40,8 +40,8 @@ monitoring, LibreChat) is already deployed. You get **your own namespace**
 - Step 0: Tour the pre-deployed platform
 - Step 1: Deploy your first agents (and chat with them)
 - Step 2: Evaluate your agent with an Experiment
-- Step 3: (Bonus) alternative UIs — Flowise, Langflow
-- Step 4: (Bonus) GitOps
+- Step 3: Protect your prompts with a PII guardrail (Presidio)
+- Step 4: (Bonus) GitOps + alternative UIs (Flowise, Langflow)
 
 # Link to the => [Miro](https://miro.com/app/board/uXjVJpTXfnE=/?share_link_id=152327591545) <=
 
@@ -78,5 +78,24 @@ Passwort: (Wird im Workshop bekannt gegeben)
    ```
 
 6. **Start hacking!** Continue with [Step 0](steps/00-resource-and-platform-plane/).
+
+---
+
+## Port-forward tip
+
+Every step that uses LibreChat or Grafana asks you to `kubectl port-forward`.
+The connection dies on every server-sent-events close, so run it in a
+retry loop (and force websockets, which are more tolerant of idle gaps):
+
+```bash
+while true; do
+  KUBECTL_PORT_FORWARD_WEBSOCKETS=true \
+    kubectl port-forward -n librechat svc/librechat-librechat 3080:3080
+  sleep 1
+done
+```
+
+Swap the namespace + service to forward Grafana (`monitoring`/`grafana 3000:80`)
+or the observability dashboard (`observability-dashboard 8100:8000`).
 
 ---

@@ -1,0 +1,59 @@
+# GuardrailProvider — tells the AI Gateway how to reach Presidio.
+apiVersion: runtime.agentic-layer.ai/v1alpha1
+kind: GuardrailProvider
+metadata:
+  name: presidio
+  namespace: <your-namespace>
+spec:
+  type: presidio-api
+  presidio:
+    baseUrl: "http://presidio.<your-namespace>:80"
+---
+# Guard — when to run Presidio, which entities to detect, what to do
+# when each is found. `MASK` replaces the entity with a placeholder
+# before the prompt reaches the LLM; `BLOCK` rejects the call entirely.
+apiVersion: runtime.agentic-layer.ai/v1alpha1
+kind: Guard
+metadata:
+  name: pii-guard
+  namespace: <your-namespace>
+spec:
+  mode:
+    - pre_call
+  description: Mask common PII in user input before it reaches the LLM; block credit-card numbers.
+  providerRef:
+    name: presidio
+    namespace: <your-namespace>
+  presidio:
+    language: "de"
+    scoreThresholds:
+      ALL: "0.7"
+    entityActions:
+      EMAIL_ADDRESS: "MASK"
+      PERSON: "MASK"
+      PHONE_NUMBER: "MASK"
+      LOCATION: "MASK"
+      CREDIT_CARD: "BLOCK"
+---
+# AiGateway — a second LiteLLM instance in your namespace, identical
+# in capability to the cluster-wide one, but with `pii-guard` attached.
+apiVersion: runtime.agentic-layer.ai/v1alpha1
+kind: AiGateway
+metadata:
+  name: ai-gateway-pii
+  namespace: <your-namespace>
+spec:
+  aiGatewayClassName: litellm
+  env:
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: "http://lgtm.monitoring.svc.cluster.local:4318"
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: "http/json"
+  aiModels:
+    - name: gemini-2.5-flash
+      provider: gemini
+    - name: gemini-2.5-flash-lite
+      provider: gemini
+  guardrails:
+    - name: pii-guard
+      namespace: <your-namespace>

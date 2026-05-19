@@ -1,0 +1,6 @@
+# Build artefacts and dev-only files. The image only needs server.py,
+# pyproject.toml, uv.lock.
+.venv/
+__pycache__/
+.pytest_cache/
+tests/

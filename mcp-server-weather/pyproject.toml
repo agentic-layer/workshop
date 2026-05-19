@@ -1,0 +1,16 @@
+[project]
+name = "weather-mcp-server"
+version = "0.1.0"
+description = "MCP server exposing Open-Meteo current weather and forecasts"
+requires-python = ">=3.12"
+dependencies = [
+    "fastmcp>=3.0.0",
+    "httpx>=0.27.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]

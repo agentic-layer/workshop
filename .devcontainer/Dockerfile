@@ -25,11 +25,15 @@ RUN curl -sL https://github.com/derailed/k9s/releases/latest/download/k9s_Linux_
 # Install Helm
 RUN curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-4 | bash
 
+# Install testkube CLI (for triggering Experiment executions)
+RUN curl -sSLf https://get.testkube.io | bash
+
 # Verify installations
 RUN kubectl version --client && \
     flux --version && \
     k9s version && \
     jq --version && \
+    which testkube && \
     curl --version
 
 # Set up non-root user

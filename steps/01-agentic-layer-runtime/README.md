@@ -1,11 +1,13 @@
 # Step 01: Deploy Your First AI Agent
 
-Two parts:
+Three parts:
 
 - **A — Deploy the example agent.** Run a ready-made CloudLand-talks
   agent so you can see all the platform pieces wired together.
 - **B — Author your own agent.** Fill in an `Agent` template that
   uses a provided weather MCP, and chat with the result.
+- **C — Agent-to-agent.** Apply a *companion* agent that has no tools
+  of its own — it delegates to the two agents from A and B.
 
 Everything else (operators, AI gateway, agent gateway, monitoring,
 LibreChat) is already running cluster-wide — see
@@ -166,6 +168,68 @@ Edit the `instruction` field, re-apply, and try again. The operator
 restarts the agent pod with the new prompt baked in (~10s). You can
 make the agent multilingual, opinionated, terse, formal — the system
 prompt is your lever.
+
+---
+
+## C · Agent-to-agent
+
+Until now your agents only talked to MCP tools. The agentic-layer
+also lets one `Agent` call another over A2A as if it were a tool —
+that's the building block of multi-agent systems.
+
+`cloudland-companion.yaml` declares an agent with **no MCP tools at
+all**. Instead it lists two `subAgents`:
+
+```yaml
+spec:
+  subAgents:
+    - name: schedule_agent
+      agentRef:
+        name: cloudland-talks-agent     # from Part A
+      interactionType: "tool_call"
+    - name: weather_agent
+      agentRef:
+        name: weather-buddy             # from Part B — see TODO in the file
+      interactionType: "tool_call"
+```
+
+The operator turns each sub-agent into a tool the LLM can invoke. The
+companion's instructions decide *when* to call each one and how to
+combine the results.
+
+### Apply
+
+If your Part B agent has a different name than `weather-buddy`, edit
+the `agentRef.name` in `cloudland-companion.yaml` to match. Then:
+
+```bash
+kubectl apply -f steps/01-agentic-layer-runtime/cloudland-companion.yaml
+```
+
+### Chat with the companion
+
+In LibreChat, switch to `$YOUR_NAMESPACE/cloudland-companion` and try:
+
+> How is the weather in Soltau right now, and what is one good DevOps
+> talk at CloudLand?
+>
+> I'm coming on Wednesday afternoon — pack a one-day plan with a few
+> talks and tell me what to wear.
+
+```mermaid
+graph LR
+    User["👤 LibreChat"] -->|OpenAI API|Gateway["🚪 Agent Gateway"]
+    Gateway -->|A2A|Companion["🤖 cloudland-companion"]
+    Companion -->|A2A|Talks["🤖 cloudland-talks-agent"]
+    Companion -->|A2A|Weather["🤖 weather-buddy"]
+    Talks -->|MCP|TalksMCP["🔧 cloudland-talks-mcp"]
+    Weather -->|MCP|WeatherMCP["🔧 weather-mcp"]
+```
+
+The companion doesn't see your MCP servers directly — it asks
+`schedule_agent` and `weather_agent`, and each leaf agent handles
+its own tools. That separation is what makes specialised agents
+composable.
 
 ---
 

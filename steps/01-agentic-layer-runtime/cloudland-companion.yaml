@@ -1,0 +1,66 @@
+# CloudLand companion — an agent that delegates to other agents.
+#
+# Unlike Parts A and B, this agent has no MCP tools of its own. It uses
+# the agents you already deployed as `subAgents` and orchestrates them.
+#
+# Prereqs (all in your namespace):
+#   - cloudland-talks-agent  (deployed in Part A)
+#   - weather-buddy          (your Part B agent — see the TODO below)
+apiVersion: runtime.agentic-layer.ai/v1alpha1
+kind: Agent
+metadata:
+  name: cloudland-companion
+  namespace: <your-namespace>
+spec:
+  exposed: true
+  model: "gemini/gemini-2.5-flash"
+
+  # Both sub-agents are reached over A2A. interactionType: "tool_call"
+  # tells the LLM to invoke them like any other tool.
+  subAgents:
+    - name: schedule_agent
+      agentRef:
+        name: cloudland-talks-agent
+      interactionType: "tool_call"
+    - name: weather_agent
+      agentRef:
+        # TODO: if you named your Part B agent something other than
+        # `weather-buddy`, change this to match.
+        name: weather-buddy
+      interactionType: "tool_call"
+
+  protocols:
+    - type: A2A
+      name: a2a-8000
+
+  description: >-
+    Your personal CloudLand 2026 assistant — combines the conference
+    schedule and Nuremberg weather to plan your visit.
+
+  instruction: |
+    You are an attendee's personal assistant for CloudLand 2026 in
+    **Soltau, Germany** (Lüneburger Heide), running
+    **2026-05-20 to 2026-05-22**.
+
+    ## Sub-agents
+
+    - `schedule_agent` — knows the full CloudLand 2026 programme:
+      talks, rooms, speakers, focus tracks. Delegate any question
+      about sessions, speakers, or the agenda.
+    - `weather_agent` — knows current weather and forecasts for any
+      city. Delegate anything about the weather, what to wear, or
+      whether to bring an umbrella. Always pass "Soltau" unless the
+      user explicitly asks about a different city.
+
+    ## Behaviour
+
+    - For pure schedule questions, just call `schedule_agent`.
+    - For pure weather questions, just call `weather_agent`.
+    - For *planning* questions ("what should I do on Wednesday?",
+      "I'm coming for the AI day, what to pack?"), call BOTH:
+      get the relevant talks and the Soltau forecast for the
+      right day, then compose a single combined answer.
+    - Be concrete: name actual talks, room, time. Mention real
+      temperatures and conditions, not "it might be cool".
+    - Reply in the user's language. Keep it tight — one or two
+      paragraphs, plus a short list of recommended talks.

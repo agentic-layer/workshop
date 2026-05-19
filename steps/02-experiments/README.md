@@ -1,22 +1,16 @@
 # Step 02: Evaluate Your Agent with an Experiment
 
-You'll apply one or more **Experiment** CRs that run your agents against
-a fixed dataset of inputs, score each response (deterministic string
-checks + LLM-as-judge goal accuracy via RAGAS), and publish per-scenario
-metrics to Mimir.
+You'll apply an **Experiment** CR that runs the `cloudland-talks-agent`
+from Step 01 against a fixed dataset of inputs, scores each response
+(deterministic string checks + LLM-as-judge goal accuracy via RAGAS),
+and publishes per-scenario metrics to Mimir.
 
-Prereq: [Step 01](../01-agentic-layer-runtime/) — the corresponding
-agent(s) are running in your namespace:
+Prereq: [Step 01](../01-agentic-layer-runtime/) — the
+`cloudland-talks-agent` is running in your namespace.
 
-- `cloudland-talks-experiment.yaml` needs the **cloudland-talks-agent**.
-- `news-experiment.yaml` needs the **news-agent**.
+## Apply the Experiment
 
-Drop either resource from `kustomization.yaml` if you only deployed one
-showcase in Step 01.
-
-## Apply the Experiments
-
-Open the YAML files in this folder and **manually replace every
+Open `cloudland-talks-experiment.yaml` and **manually replace every
 `<your-namespace>` with your namespace** — same flow as Step 01. Skim
 the scenarios in `spec.dataset.inline.scenarios` while you're there;
 those are the test cases you're about to run.
@@ -25,7 +19,7 @@ those are the test cases you're about to run.
 kubectl apply -k steps/02-experiments
 ```
 
-Behind the scenes the testbench-operator turns each `Experiment` CR
+Behind the scenes the testbench-operator turns the `Experiment` CR
 into a `TestWorkflow` in the `testkube` namespace:
 
 ```bash

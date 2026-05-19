@@ -15,8 +15,8 @@ graph LR
     Gateway -->|masked prompt|LLM[(Gemini)]
 ```
 
-Prereq: [Step 01](../01-agentic-layer-runtime/) — one of the showcase
-agents (e.g. `cloudland-talks-agent`) is running in `$YOUR_NAMESPACE`.
+Prereq: [Step 01](../01-agentic-layer-runtime/) — the
+`cloudland-talks-agent` is running in `$YOUR_NAMESPACE`.
 
 ## What you're deploying
 
@@ -56,9 +56,8 @@ You should see `presidio-…` and `ai-gateway-pii-…` pods reaching
 
 ## Switch your agent over
 
-Open your showcase agent file from Step 01 (e.g.
-`steps/01-agentic-layer-runtime/showcase-cloudland-talks/cloudland-talks-agent.yaml`)
-and add an `aiGatewayRef` to its `spec`:
+Open `steps/01-agentic-layer-runtime/cloudland-talks-agent.yaml` and
+change the `spec.aiGatewayRef` to point at your in-namespace gateway:
 
 ```yaml
 spec:
@@ -70,7 +69,7 @@ spec:
 Re-apply:
 
 ```bash
-kubectl apply -k steps/01-agentic-layer-runtime/showcase-cloudland-talks
+kubectl apply -k steps/01-agentic-layer-runtime
 ```
 
 The operator restarts the agent pod with the new gateway URL baked in.
@@ -83,7 +82,7 @@ PII-clean prompts, then with prompts that contain PII:
 
 | Try | Expected |
 |---|---|
-| `Was sind die heutigen News?` | normal answer (no PII triggered) |
+| `Welche AI-Talks gibt es bei CloudLand 2026?` | normal answer (no PII triggered) |
 | `Mein Name ist Klaus Müller, ich wohne in Berlin, meine E-Mail ist klaus@example.com — fasse das zusammen.` | LLM sees `<PERSON>`, `<LOCATION>`, `<EMAIL_ADDRESS>` placeholders; response refers to the user by those tokens |
 | `Meine Kreditkarte ist 4111-1111-1111-1111` | request is **blocked** before reaching the LLM — LibreChat surfaces the Guard's rejection |
 

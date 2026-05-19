@@ -1,0 +1,63 @@
+apiVersion: testbench.agentic-layer.ai/v1alpha1
+kind: Experiment
+metadata:
+  name: cloudland-talks-experiment
+  namespace: <your-namespace>
+spec:
+  agentRef:
+    name: cloudland-talks-agent
+    namespace: <your-namespace>
+  aiGatewayRef:
+    name: ai-gateway
+    namespace: ai-gateway
+  env:
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      valueFrom:
+        configMapKeyRef:
+          name: otel-config
+          key: OTEL_EXPORTER_OTLP_ENDPOINT
+  trigger:
+    enabled: true
+  dataset:
+    inline:
+      llmAsAJudgeModel: "gemini-2.5-flash-lite"
+      defaultThreshold: 0.7
+      scenarios:
+        - name: "Lookup a talk by a known speaker"
+          steps:
+            - input: "Which talk does Felix Kampfer give at CloudLand 2026?"
+              reference:
+                response: "Kontrolle statt Chaos"
+              metrics:
+                - metricName: StringPresence
+                  threshold: 1.0
+                - metricName: AgentGoalAccuracyWithoutReference
+
+        - name: "Find a specific talk by title"
+          steps:
+            - input: "Tell me about the workshop titled 'Kontrolle statt Chaos: Aufbau einer souveränen Agentic AI Platform'."
+              reference:
+                response: "Jannis Schaefer"
+              metrics:
+                - metricName: StringPresence
+                  threshold: 1.0
+                - metricName: AgentGoalAccuracyWithoutReference
+
+        - name: "Recommend talks by topic focus"
+          steps:
+            - input: "What AI talks are on the agenda?"
+              reference:
+                response: "AI & ML"
+              metrics:
+                - metricName: StringPresence
+                  threshold: 1.0
+                - metricName: AgentGoalAccuracyWithoutReference
+
+        - name: "Refuse off-topic question"
+          steps:
+            - input: "What's the weather like in Berlin right now?"
+              reference:
+                response: "CloudLand"
+              metrics:
+                - metricName: StringPresence
+                  threshold: 1.0

@@ -77,27 +77,59 @@ The operator restarts the agent pod with the new gateway URL baked in.
 ## Compare
 
 Port-forward LibreChat (or keep your Step 01 forward running), pick the
-**Agent Gateway** endpoint, and chat with the same agent — first with
-PII-clean prompts, then with prompts that contain PII:
+**Agent Gateway** endpoint, and chat with the same agent.
 
-| Try | Expected |
-|---|---|
-| `Welche AI-Talks gibt es bei CloudLand 2026?` | normal answer (no PII triggered) |
-| `Mein Name ist Klaus Müller, ich wohne in Berlin, meine E-Mail ist klaus@example.com — fasse das zusammen.` | LLM sees `<PERSON>`, `<LOCATION>`, `<EMAIL_ADDRESS>` placeholders; response refers to the user by those tokens |
-| `Meine Kreditkarte ist 4111-1111-1111-1111` | request is **blocked** before reaching the LLM — LibreChat surfaces the Guard's rejection |
+### 1. BLOCK — the visible demo
 
-> Presidio's German NLP model is picky about PERSON detection — give it a
-> clear introduction (`Mein Name ist …`) to maximise the recall.
-
-To confirm what reached the LLM, look at the new gateway's logs:
-
-```bash
-kubectl logs -n $YOUR_NAMESPACE deployment/ai-gateway-pii --tail=200 | grep -iE "presidio|guard|mask|block"
+```
+Meine Kreditkarte ist 4111-1111-1111-1111. Bitte bestätige.
 ```
 
-Switch the agent back to the platform gateway by setting
-`spec.aiGatewayRef.name: ai-gateway` (and adding `namespace: ai-gateway`)
-to see the unmasked round-trip side-by-side.
+The request is rejected before reaching the LLM. LibreChat surfaces:
+
+> `Blocked entity detected: CREDIT_CARD by Guardrail: pii-guard.`
+
+### 2. MASK — transparent by design, verify via Tempo
+
+```
+Mein Name ist Klaus Müller, ich wohne in Berlin. Schreibe mir einen kurzen Gruß.
+```
+
+The response looks *normal* — it greets you as Klaus. **That's not a
+bug.** LiteLLM's Presidio integration runs a round trip:
+
+1. **Pre-call**: mask matched entities → the LLM receives
+   `Mein Name ist <PERSON_1>, ich wohne in <LOCATION_1>. …`
+2. **Post-call**: restore the placeholders back to the originals before
+   the response leaves the gateway.
+
+So the LLM never sees your PII, but your UX is unchanged. To **prove**
+masking happened, open the trace for that request:
+
+1. Port-forward Grafana, open the **Explore** view → pick the **Tempo**
+   datasource.
+2. Run a TraceQL query scoped to your gateway:
+   ```traceql
+   { resource.service.name = "ai-gateway-pii" }
+   ```
+3. Click into the most recent trace → expand the
+   **`Received Proxy Server Request`** span (the root).
+4. Look at these attributes:
+   - **`gen_ai.input.messages`** — the prompt as it reached Gemini.
+     You'll see `<PERSON_1>`, `<LOCATION_1>` instead of `Klaus Müller`
+     and `Berlin`.
+   - **`metadata.applied_guardrails`** — confirms `pii-guard` fired.
+5. Expand the **`guardrail`** child spans for the per-entity detection
+   results (entity type, score, span offsets).
+
+> Presidio's German NLP model is picky about PERSON detection — give it
+> a clear introduction (`Mein Name ist …`) to maximise recall.
+
+### 3. Switch back
+
+To see the un-guarded round-trip for comparison, set
+`spec.aiGatewayRef.name: ai-gateway` (with `namespace: ai-gateway`)
+and re-apply.
 
 ## Tweak the policy
 

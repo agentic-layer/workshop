@@ -15,21 +15,6 @@ You'll learn how to create a unified platform that simplifies the entire AI life
 
 This repo guides you through the process of deploying agents onto a pre-provisioned AI platform.
 
-## Agenda
-
-10:00 Uhr: Einführung
-- Vorstellung und Zielsetzung
-- Architektur-Deep-Dive: Bausteine einer KI-Plattform
-- (Kaffeepause um 11:30)
-
-13:00 Uhr: Mittagspause
-
-14:00 Uhr: Technologie-Stack unter der Lupe
-- Deployment und Betrieb von Agentic Workloads
-- (Kaffeepause um 15:30)
-- Offene Diskussion, Q&A und Wrap-up
-
-ca. 17:00 Uhr: Ende
 
 ## Overview
 
@@ -43,10 +28,6 @@ monitoring, LibreChat) is already deployed. You get **your own namespace**
 - Step 3: Protect your prompts with a PII guardrail (Presidio)
 - Step 4: (Bonus) GitOps + alternative UIs (Flowise, Langflow)
 
-# Link to the => [Miro](https://miro.com/app/board/uXjVJpTXfnE=/?share_link_id=152327591545) <=
-
-Passwort: (Wird im Workshop bekannt gegeben)
-
 ---
 
 ## Setup
@@ -54,8 +35,6 @@ Passwort: (Wird im Workshop bekannt gegeben)
 1. **Fork** this repository.
 
 2. **Create a GitHub Codespace** on your fork.
-
-   ![img.png](img.png)
 
 3. **Claim a namespace** by entering your name (or just an emoji) next to one of
    the `ns-XX` slots on this spreadsheet: https://ethercalc.net/mzku2p0zjwkk

@@ -16,7 +16,8 @@
       "settings": {
         "yaml.schemas": {
           "kubernetes": "*.yaml"
-        }
+        },
+        "chat.disableAIFeatures": true
       }
     }
   },

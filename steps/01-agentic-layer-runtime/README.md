@@ -74,8 +74,10 @@ while true; do
 done
 ```
 
-Open <http://localhost:3080>, sign up with any email/password, pick the
-**Agent Gateway** endpoint, and find your agent in the model list as
+Open <http://localhost:3080>, sign up with any email/password (or use
+the shared shortcut: username **`fake@example.com`** with password
+**`fake@example.com`** — same string for both), pick the **Agent
+Gateway** endpoint, and find your agent in the model list as
 `$YOUR_NAMESPACE/cloudland-talks-agent`. Try:
 
 > What AI talks are at CloudLand 2026?

@@ -63,3 +63,8 @@ spec:
     #   - If asked for "weather", default to get_current_weather.
     #   - If asked for the week / multiple days, use get_forecast.
     #   - Politely refuse questions that aren't about weather.
+
+  # Off by default in agent-template-adk 0.8.0; required for spans to reach Tempo.
+  env:
+    - name: AGENT_OTEL_ENABLED
+      value: "true"

@@ -63,3 +63,6 @@ spec:
       temperatures and conditions, not "it might be cool".
     - Reply in the user's language. Keep it tight — one or two
       paragraphs, plus a short list of recommended talks.
+  env:
+    - name: AGENT_OTEL_ENABLED
+      value: "true"

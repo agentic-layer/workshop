@@ -15,9 +15,12 @@ kubectl config set-context --current --namespace=$YOUR_NAMESPACE
 kubectl get namespace $YOUR_NAMESPACE -o yaml
 ```
 
-The `instrumentation.opentelemetry.io/inject-sdk` annotation means any pod
-you create gets auto-instrumented — logs and traces flow into the shared
-Grafana stack with no config.
+The `instrumentation.opentelemetry.io/inject-sdk` annotation tells the
+OTel operator to inject SDK config (collector endpoint, sampler, resource
+attributes) into every pod you create. Apps that initialise an OTel SDK
+at startup — like the agent template, when `AGENT_OTEL_ENABLED=true` is
+set on the `Agent` (see Step 01) — then push their logs and traces into
+the shared Grafana stack.
 
 ## Operators (Custom Resource controllers)
 

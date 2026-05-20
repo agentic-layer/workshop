@@ -1,6 +1,6 @@
 # Workshop: Kontrolle statt Chaos - Aufbau einer souveränen Agentic AI Platform
 
-This is the companion repository for a workshop at the Cloudland conference in Solltau on May 21st, 2026.
+This is the companion repository for a workshop at the Cloudland conference in Soltau on May 21st, 2026.
 
 ## Abstract
 

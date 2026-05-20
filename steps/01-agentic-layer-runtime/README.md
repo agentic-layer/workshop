@@ -92,9 +92,11 @@ graph LR
 
 The operator turned your `Agent` / `ToolServer` YAML into Deployments +
 Services, wired LLM calls to the shared AI Gateway (no API keys needed
-in your namespace), registered the agent with the shared Agent Gateway
-(because `exposed: true`), and auto-injected OTel so logs + traces show
-up in Grafana.
+in your namespace), and registered the agent with the shared Agent
+Gateway (because `exposed: true`). `AGENT_OTEL_ENABLED: "true"` in the
+Agent spec turns on OpenTelemetry inside the agent template; the
+namespace's `inject-sdk` annotation supplies the SDK config — together
+they send logs + traces to Grafana.
 
 ---
 

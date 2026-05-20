@@ -42,3 +42,6 @@ spec:
 
     Reply concisely in Markdown. Never paste raw agenda IDs at the user;
     use them only to fetch details internally.
+  env:
+    - name: AGENT_OTEL_ENABLED
+      value: "true"

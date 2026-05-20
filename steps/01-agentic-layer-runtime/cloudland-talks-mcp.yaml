@@ -2,7 +2,6 @@ apiVersion: runtime.agentic-layer.ai/v1alpha1
 kind: ToolServer
 metadata:
   name: cloudland-talks-mcp
-  namespace: <your-namespace>
 spec:
   protocol: mcp
   transportType: http

@@ -25,10 +25,8 @@ Gateway so LibreChat can talk to it.
 
 ### Apply
 
-Open the three YAML files in this folder and **manually replace every
-`<your-namespace>` with your namespace** (e.g. `ns-07`). Skim the rest
-of each file while you're there — these are the manifests you're about
-to deploy:
+Skim the three YAML files in this folder — these are the manifests
+you're about to deploy:
 
 - `cloudland-talks-mcp.yaml` — a `ToolServer` pointing at the
   CloudLand-talks MCP server image.
@@ -50,15 +48,15 @@ kubectl apply -k steps/01-agentic-layer-runtime
 Verify:
 
 ```bash
-kubectl get agents,toolservers,toolroutes,pods -n $YOUR_NAMESPACE
+kubectl get agents,toolservers,toolroutes,pods
 ```
 
 Both pods should reach `Running` / `1/1 Ready` within ~60 seconds. If
 something stays pending:
 
 ```bash
-kubectl describe agent cloudland-talks-agent -n $YOUR_NAMESPACE
-kubectl logs deployment/cloudland-talks-agent -n $YOUR_NAMESPACE
+kubectl describe agent cloudland-talks-agent
+kubectl logs deployment/cloudland-talks-agent
 ```
 
 ### Chat with the example agent
@@ -114,7 +112,7 @@ image that wraps the [Open-Meteo](https://open-meteo.com/) APIs (no
 API key, no setup). Three tools: `geocode_city`, `get_current_weather`,
 `get_forecast(city, days)`.
 
-Replace `<your-namespace>` and apply:
+Apply it:
 
 ```bash
 kubectl apply -f steps/01-agentic-layer-runtime/weather-mcp.yaml
@@ -123,7 +121,7 @@ kubectl apply -f steps/01-agentic-layer-runtime/weather-mcp.yaml
 Verify the pod comes up:
 
 ```bash
-kubectl get toolserver,pod -l app.kubernetes.io/name=weather-mcp -n $YOUR_NAMESPACE
+kubectl get toolserver,pod -l app.kubernetes.io/name=weather-mcp
 ```
 
 ### Step 2 — Fill in `your-agent.yaml`

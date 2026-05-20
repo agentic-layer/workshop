@@ -3,7 +3,6 @@ apiVersion: runtime.agentic-layer.ai/v1alpha1
 kind: GuardrailProvider
 metadata:
   name: presidio
-  namespace: <your-namespace>
 spec:
   type: presidio-api
   presidio:
@@ -16,14 +15,12 @@ apiVersion: runtime.agentic-layer.ai/v1alpha1
 kind: Guard
 metadata:
   name: pii-guard
-  namespace: <your-namespace>
 spec:
   mode:
     - pre_call
   description: Mask common PII in user input before it reaches the LLM; block credit-card numbers.
   providerRef:
     name: presidio
-    namespace: <your-namespace>
   presidio:
     language: "de"
     scoreThresholds:
@@ -41,7 +38,6 @@ apiVersion: runtime.agentic-layer.ai/v1alpha1
 kind: AiGateway
 metadata:
   name: ai-gateway-pii
-  namespace: <your-namespace>
 spec:
   aiGatewayClassName: litellm
   env:
@@ -56,4 +52,3 @@ spec:
       provider: gemini
   guardrails:
     - name: pii-guard
-      namespace: <your-namespace>

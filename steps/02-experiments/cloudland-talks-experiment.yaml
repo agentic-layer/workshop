@@ -2,11 +2,9 @@ apiVersion: testbench.agentic-layer.ai/v1alpha1
 kind: Experiment
 metadata:
   name: cloudland-talks-experiment
-  namespace: <your-namespace>
 spec:
   agentRef:
     name: cloudland-talks-agent
-    namespace: <your-namespace>
   aiGatewayRef:
     name: ai-gateway
     namespace: ai-gateway

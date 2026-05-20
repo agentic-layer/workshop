@@ -2,7 +2,6 @@ apiVersion: runtime.agentic-layer.ai/v1alpha1
 kind: Agent
 metadata:
   name: cloudland-talks-agent
-  namespace: <your-namespace>
 spec:
   exposed: true
   model: "gemini/gemini-2.5-flash"

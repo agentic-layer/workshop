@@ -2,7 +2,7 @@
 #
 # Fill in the TODOs, then `kubectl apply -f your-agent.yaml`.
 # The agent will be reachable in LibreChat under
-# "<your-namespace>/<the metadata.name you choose below>".
+# "$YOUR_NAMESPACE/<the metadata.name you choose below>".
 #
 # This template wires the agent to weather-mcp.yaml. Apply that
 # ToolServer first (or together) so the tool is available.
@@ -12,7 +12,6 @@ metadata:
   # TODO: give your agent a memorable, lowercase, hyphenated name.
   # Examples: weather-buddy, travel-planner, packing-helper.
   name: my-agent
-  namespace: <your-namespace>
 spec:
   # Setting this to `true` registers the agent with the platform
   # Agent Gateway, so LibreChat can find it. Keep `true`.

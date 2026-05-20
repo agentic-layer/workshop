@@ -143,8 +143,3 @@ In `ai-gateway-pii.yaml`, edit `Guard.spec.presidio`:
 
 Re-apply `kubectl apply -k steps/03-pii-protection/pii-stack`. The Guard
 is hot-reloaded by the gateway; no agent restart needed.
-
-## Next
-
-[Step 04 — Extras](../04-extras/) — GitOps with Flux, alternative agentic
-UIs (Flowise, Langflow).

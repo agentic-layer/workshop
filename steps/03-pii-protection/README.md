@@ -38,9 +38,6 @@ PII categories get masked vs. blocked.
 
 ## Apply
 
-Open every file in `pii-stack/` and replace `<your-namespace>` with your
-namespace (same flow as Step 01). Then:
-
 ```bash
 kubectl apply -k steps/03-pii-protection/pii-stack
 ```

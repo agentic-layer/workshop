@@ -6,7 +6,7 @@ metadata:
 spec:
   type: presidio-api
   presidio:
-    baseUrl: "http://presidio.<your-namespace>:80"
+    baseUrl: "http://presidio:80"
 ---
 # Guard — when to run Presidio, which entities to detect, what to do
 # when each is found. `MASK` replaces the entity with a placeholder

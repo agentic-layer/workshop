@@ -48,7 +48,7 @@ kubectl apply -k steps/03-pii-protection/pii-stack
 Wait for everything to come up:
 
 ```bash
-kubectl get aigateway,guard,guardrailprovider,pods -n $YOUR_NAMESPACE
+kubectl get aigateway,guard,guardrailprovider,pods
 ```
 
 You should see `presidio-…` and `ai-gateway-pii-…` pods reaching

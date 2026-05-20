@@ -10,10 +10,9 @@ Prereq: [Step 01](../01-agentic-layer-runtime/) — the
 
 ## Apply the Experiment
 
-Open `cloudland-talks-experiment.yaml` and **manually replace every
-`<your-namespace>` with your namespace** — same flow as Step 01. Skim
-the scenarios in `spec.dataset.inline.scenarios` while you're there;
-those are the test cases you're about to run.
+Skim `cloudland-talks-experiment.yaml`, especially the scenarios in
+`spec.dataset.inline.scenarios` — those are the test cases you're
+about to run.
 
 ```bash
 kubectl apply -k steps/02-experiments
@@ -23,7 +22,7 @@ Behind the scenes the testbench-operator turns the `Experiment` CR
 into a `TestWorkflow` in the `testkube` namespace:
 
 ```bash
-kubectl get experiments -n $YOUR_NAMESPACE
+kubectl get experiments
 testkube get testworkflow
 ```
 

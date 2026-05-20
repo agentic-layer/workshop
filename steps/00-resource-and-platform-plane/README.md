@@ -9,6 +9,9 @@ This step is a quick tour so you know what's available.
 ## Your namespace
 
 ```bash
+# Set the Namespace in your Kubeconfig.
+kubectl config set-context --current --namespace=$YOUR_NAMESPACE
+
 kubectl get namespace $YOUR_NAMESPACE -o yaml
 ```
 

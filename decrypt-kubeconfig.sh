@@ -15,15 +15,15 @@ if [ -z "$1" ] || [ -z "$2" ]; then
   echo ""
   echo "Examples:"
   echo "  # Print to stdout"
-  echo "  $0 kubeconfigs/participant-1-kubeconfig.yaml.enc my-password"
+  echo "  $0 kubeconfigs/workshop-kubeconfig.yaml.enc my-password"
   echo ""
   echo "  # Save to file"
-  echo "  $0 kubeconfigs/participant-1-kubeconfig.yaml.enc my-password kubeconfig.yaml"
+  echo "  $0 kubeconfigs/workshop-kubeconfig.yaml.enc my-password kubeconfig.yaml"
   echo ""
   echo "  # Save and use directly"
-  echo "  $0 kubeconfigs/participant-1-kubeconfig.yaml.enc my-password my-kubeconfig.yaml"
-  echo "  export KUBECONFIG=my-kubeconfig.yaml"
-  echo "  kubectl get nodes"
+  echo "  $0 kubeconfigs/workshop-kubeconfig.yaml.enc my-password kubeconfig.yaml"
+  echo "  export KUBECONFIG=kubeconfig.yaml"
+  echo "  kubectl get namespaces"
   exit 1
 fi
 
@@ -48,5 +48,5 @@ else
   echo ""
   echo "To use this kubeconfig:"
   echo "  export KUBECONFIG=$OUTPUT_FILE"
-  echo "  kubectl get nodes"
+  echo "  kubectl get namespaces"
 fi

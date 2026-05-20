@@ -1,6 +1,6 @@
-# Workshop: Architecting and Building a K8s-based AI Platform
+# Workshop: Kontrolle statt Chaos - Aufbau einer souveränen Agentic AI Platform
 
-This is the companion repository for a full-day workshop at the Continuous Lifecycle Conference in Mannheim on November 18, 2025.
+This is the companion repository for a workshop at the Cloudland conference in Solltau on May 21st, 2026.
 
 ## Abstract
 

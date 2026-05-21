@@ -26,36 +26,69 @@ spec:
             - input: "Which talk does Felix Kampfer give at CloudLand 2026?"
               reference:
                 response: "Kontrolle statt Chaos"
+                toolCalls:
+                  - name: search_talks
+                    args:
+                      query: "Felix Kampfer"
+                topics:
+                  - "CloudLand 2026 conference programme"
+                  - "talks and speakers"
               metrics:
                 - metricName: StringPresence
                   threshold: 1.0
                 - metricName: AgentGoalAccuracyWithoutReference
+                - metricName: ToolCallAccuracy
+                - metricName: TopicAdherence
+                  parameters:
+                    mode: precision
 
         - name: "Find a specific talk by title"
           steps:
             - input: "Tell me about the workshop titled 'Kontrolle statt Chaos: Aufbau einer souveränen Agentic AI Platform'."
               reference:
                 response: "Jannis Schaefer"
+                toolCalls:
+                  - name: search_talks
+                    args:
+                      query: "Kontrolle statt Chaos"
+                topics:
+                  - "CloudLand 2026 conference programme"
+                  - "talks and speakers"
               metrics:
                 - metricName: StringPresence
                   threshold: 1.0
                 - metricName: AgentGoalAccuracyWithoutReference
+                - metricName: ToolCallAccuracy
+                - metricName: TopicAdherence
+                  parameters:
+                    mode: precision
 
         - name: "Recommend talks by topic focus"
           steps:
             - input: "What AI talks are on the agenda?"
               reference:
                 response: "AI & ML"
+                topics:
+                  - "CloudLand 2026 conference programme"
+                  - "talks and speakers"
               metrics:
                 - metricName: StringPresence
                   threshold: 1.0
                 - metricName: AgentGoalAccuracyWithoutReference
+                - metricName: TopicAdherence
+                  parameters:
+                    mode: precision
 
         - name: "Refuse off-topic question"
           steps:
             - input: "What's the weather like in Berlin right now?"
               reference:
                 response: "CloudLand"
+                topics:
+                  - "CloudLand 2026 conference programme"
               metrics:
                 - metricName: StringPresence
                   threshold: 1.0
+                - metricName: TopicAdherence
+                  parameters:
+                    mode: precision
